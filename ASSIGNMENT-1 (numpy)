@@ -1,4 +1,5 @@
 import numpy as np
+
 arr=np.array([1,2,3,4,5])
 reversed_arr = arr[::-1]
 print("Original array:",arr)
@@ -35,3 +36,22 @@ row_sum=gfg.sum(axis=1)
 print("ROW-WISE SUM:\n",row_sum)
 column_sum=gfg.sum(axis=0)
 print("column-wise sum:\n",column_sum)
+
+n_array=np.array([[55,25,15],[30,44,2],[11,45,77]])
+diag_sum=np.trace(n_array)
+print("sum of diagonal:",diag_sum)
+eigenvalues=np.linalg.eig(n_array)
+print("Eigen values:\n",eigenvalues)
+eigenvectors=np.linalg.eig(n_array)
+print("Eigen vectors:\n",eigenvectors)
+inverse_matrix=np.linalg.inv(n_array)
+print("Inverse matrix:\n",inverse_matrix)
+det=np.linalg.det(n_array)
+print("determinet of matrix:\n",det)
+
+p=np.array([[1,2],[2,3]])
+q=np.array([[4,5],[6,7]])
+product=np.dot(p,q)
+print("Matrix multiplication:",product)
+cov=np.cov(p.flatten(),q.flatten())
+print("covariance matrix:\n",cov)

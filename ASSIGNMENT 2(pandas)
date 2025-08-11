@@ -1,1 +1,101 @@
+import pandas as pd
 
+data = {
+    'Name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Edward', 'Fiona', 'George', 'Hannah', 'Ian', 'Julia'],
+    'Age': [25, 30, 35, 40, 45, 50, 55, 60, 65, 70],
+    'City': ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose'],
+    'Salary': [70000, 80000, 65000, 90000, 85000, 75000, 72000, 78000, 69000, 71000],
+    'Department': ['HR', 'IT', 'IT', 'Marketing', 'Sales', 'HR', 'IT', 'Marketing', 'Sales', 'HR']
+}
+
+df = pd.DataFrame(data)
+print(df)
+
+print(df.loc[[0, 4, 7, 8]])
+
+print(df.loc[3:7])
+
+print(df.iloc[4:9, 2:5])
+
+print(df.iloc[:, 1:4])
+
+
+from google.colab import files
+uploaded = files.upload()
+
+import pandas as pd
+import io
+
+iris_df = pd.read_csv(io.BytesIO(uploaded['Iris.csv']))
+print(iris_df.head())
+
+iris_df = iris_df.drop(4)
+iris_df = iris_df.drop(iris_df.columns[3], axis=1)
+print(iris_df.head())
+
+emp_data = {
+    'Employee_ID': [101, 102, 103, 104, 105],
+    'Name': ['Alice', 'Bob', 'Charlie', 'Diana', 'Edward'],
+    'Department': ['HR', 'IT', 'IT', 'Marketing', 'Sales'],
+    'Age': [29, 34, 41, 28, 38],
+    'Salary': [50000, 70000, 65000, 55000, 60000],
+    'Years_of_Experience': [4, 8, 10, 3, 12],
+    'Joining_Date': ['2020-03-15', '2017-07-19', '2013-06-01', '2021-02-10', '2010-11-25'],
+    'Gender': ['Female', 'Male', 'Male', 'Female', 'Male'],
+    'Bonus': [5000, 7000, 6000, 4500, 5000],
+    'Rating': [4.5, 4.0, 3.8, 4.7, 3.5]
+}
+
+emp_df = pd.DataFrame(emp_data)
+emp_df['Joining_Date'] = pd.to_datetime(emp_df['Joining_Date'])
+
+print(emp_df.shape)
+
+print(emp_df.info())
+
+print(emp_df.describe(include='all'))
+
+print(emp_df.head())
+print(emp_df.tail(3))
+
+
+avg_salary = emp_df['Salary'].mean()
+total_bonus = emp_df['Bonus'].sum()
+youngest_age = emp_df['Age'].min()
+highest_rating = emp_df['Rating'].max()
+
+print(f"Average Salary: {avg_salary}")
+print(f"Total Bonus Paid: {total_bonus}")
+print(f"Youngest Age: {youngest_age}")
+print(f"Highest Rating: {highest_rating}")
+
+sorted_df = emp_df.sort_values(by='Salary', ascending=False)
+print(sorted_df)
+
+def performance_cat(rating):
+    if rating >= 4.5:
+        return 'Excellent'
+    elif rating >= 4.0:
+        return 'Good'
+    else:
+        return 'Average'
+
+emp_df['Performance_Category'] = emp_df['Rating'].apply(performance_cat)
+print(emp_df[['Name', 'Rating', 'Performance_Category']])
+
+print(emp_df.isnull().sum())
+
+emp_df.rename(columns={'Employee_ID': 'ID'}, inplace=True)
+print(emp_df.columns)
+
+exp_gt_5 = emp_df[emp_df['Years_of_Experience'] > 5]
+print(exp_gt_5)
+
+it_dept = emp_df[emp_df['Department'] == 'IT']
+print(it_dept)
+
+emp_df['Tax'] = emp_df['Salary'] * 0.10
+print(emp_df[['Name', 'Salary', 'Tax']])
+
+emp_df.to_csv('employees_modified.csv', index=False)
+print("File saved as employees_modified.csv")

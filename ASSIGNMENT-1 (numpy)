@@ -55,3 +55,43 @@ product=np.dot(p,q)
 print("Matrix multiplication:",product)
 cov=np.cov(p.flatten(),q.flatten())
 print("covariance matrix:\n",cov)
+
+x_mat = np.array([[2, 3, 4], [3, 2, 9]])
+y_mat = np.array([[1, 5, 0], [5, 10, 3]])
+inner = np.inner(x_mat, y_mat)
+outer = np.outer(x_mat, y_mat)
+cartesian = np.array(np.meshgrid(x_mat, y_mat)).T.reshape(-1, 2)
+print("Q1 (h) inner product:\n", inner)
+print("Q1 (h) outer product:\n", outer)
+print("Q1 (h) cartesian product:\n", cartesian)
+
+
+array = np.array([[1, -2, 3], [-4, 5, -6]])
+print("Q2 (a)(i) absolute values:\n", np.abs(array))
+flat = array.flatten()
+print("Q2 (a)(ii) percentiles of flattened array:", np.percentile(flat, [25, 50, 75]))
+print("Q2 (a)(ii) percentiles for each column:\n", np.percentile(array, [25, 50, 75], axis=0))
+print("Q2 (a)(ii) percentiles for each row:\n", np.percentile(array, [25, 50, 75], axis=1))
+print("Q2 (a)(iii) mean, median, std of flattened array:", np.mean(flat), np.median(flat), np.std(flat))
+print("Q2 (a)(iii) mean, median, std of each column:")
+print(np.mean(array, axis=0), np.median(array, axis=0), np.std(array, axis=0))
+print("Q2 (a)(iii) mean, median, std of each row:")
+print(np.mean(array, axis=1), np.median(array, axis=1), np.std(array, axis=1))
+
+a = np.array([-1.8, -1.6, -0.5, 0.5, 1.6, 1.8, 3.0])
+print("Q2 (b) floor:", np.floor(a))
+print("Q2 (b) ceiling:", np.ceil(a))
+print("Q2 (b) truncated:", np.trunc(a))
+print("Q2 (b) rounded:", np.round(a))
+
+array_q3 = np.array([10, 52, 62, 16, 16, 54, 453])
+print("Q3 (a)(i) sorted array:", np.sort(array_q3))
+print("Q3 (a)(ii) indices of sorted array:", np.argsort(array_q3))
+print("Q3 (a)(iii) 4 smallest elements:", np.partition(array_q3, 3)[:4])
+print("Q3 (a)(iv) 5 largest elements:", np.partition(array_q3, -5)[-5:])
+
+array_q3_b = np.array([1.0, 1.2, 2.2, 2.0, 3.0, 2.0])
+ints = array_q3_b[array_q3_b == array_q3_b.astype(int)]
+floats = array_q3_b[array_q3_b != array_q3_b.astype(int)]
+print("Q3 (b)(i) integer elements only:", ints)
+print("Q3 (b)(ii) float elements only:", floats)

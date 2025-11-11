@@ -1,1 +1,88 @@
+from sklearn.datasets import load_iris, load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+import pandas as pd
 
+iris = load_iris()
+X = iris.data
+y = iris.target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+kernels = ["linear", "poly", "rbf"]
+results = []
+
+print("===== SVM Classification on Iris Dataset =====\n")
+
+for kernel in kernels:
+    if kernel == "poly":
+        model = SVC(kernel=kernel, degree=3)
+    else:
+        model = SVC(kernel=kernel)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    acc = accuracy_score(y_test, y_pred)
+    prec = precision_score(y_test, y_pred, average="weighted")
+    rec = recall_score(y_test, y_pred, average="weighted")
+    f1 = f1_score(y_test, y_pred, average="weighted")
+    cm = confusion_matrix(y_test, y_pred)
+    results.append({"Kernel": kernel, "Accuracy": acc, "Precision": prec, "Recall": rec, "F1 Score": f1})
+    print(f"Kernel: {kernel.upper()}")
+    print(f"Accuracy: {acc:.4f}")
+    print(f"Precision: {prec:.4f}")
+    print(f"Recall: {rec:.4f}")
+    print(f"F1 Score: {f1:.4f}")
+    print(f"Confusion Matrix:\n{cm}\n")
+
+best_model = max(results, key=lambda x: x["Accuracy"])
+print("Best Performing Kernel:", best_model["Kernel"].upper())
+print(f"Accuracy: {best_model['Accuracy']:.4f}\n")
+
+pd.DataFrame(results).to_csv("Assignment7_Iris_Results.csv", index=False)
+
+print("===== Effect of Feature Scaling on SVM (Breast Cancer Dataset) =====\n")
+
+cancer = load_breast_cancer()
+X_cancer = cancer.data
+y_cancer = cancer.target
+
+X_train_c, X_test_c, y_train_c, y_test_c = train_test_split(X_cancer, y_cancer, test_size=0.2, random_state=42)
+
+svm_unscaled = SVC(kernel="rbf")
+svm_unscaled.fit(X_train_c, y_train_c)
+train_acc_unscaled = svm_unscaled.score(X_train_c, y_train_c)
+test_acc_unscaled = svm_unscaled.score(X_test_c, y_test_c)
+
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train_c)
+X_test_scaled = scaler.transform(X_test_c)
+
+svm_scaled = SVC(kernel="rbf")
+svm_scaled.fit(X_train_scaled, y_train_c)
+train_acc_scaled = svm_scaled.score(X_train_scaled, y_train_c)
+test_acc_scaled = svm_scaled.score(X_test_scaled, y_test_c)
+
+print("Without Feature Scaling:")
+print(f"Training Accuracy: {train_acc_unscaled:.4f}")
+print(f"Testing Accuracy:  {test_acc_unscaled:.4f}\n")
+
+print("With Feature Scaling (StandardScaler):")
+print(f"Training Accuracy: {train_acc_scaled:.4f}")
+print(f"Testing Accuracy:  {test_acc_scaled:.4f}\n")
+
+print("===== Discussion =====")
+print("Feature scaling significantly improves SVM performance, especially for RBF and Polynomial kernels.\n"
+      "Without scaling, features with larger numeric ranges dominate distance calculations, causing poor model generalization.\n"
+      "After scaling, all features contribute equally, resulting in better accuracy and a more stable decision boundary.\n")
+
+df_cancer = pd.DataFrame({
+    "Condition": ["Without Scaling", "With Scaling"],
+    "Training Accuracy": [train_acc_unscaled, train_acc_scaled],
+    "Testing Accuracy": [test_acc_unscaled, test_acc_scaled]
+})
+df_cancer.to_csv("Assignment7_Cancer_Results.csv", index=False)
+
+print("Results saved as:")
+print("Assignment7_Iris_Results.csv")
+print("Assignment7_Cancer_Results.csv")
